@@ -1,21 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
-function App() {
-  const [message, setMessage] = useState("");
+import Login from './pages/Login';
+import NavBar from './components/NavBar';
+
+import MainPage from './pages/MainPage';
+import NotFound from './pages/NotFound';
+
+const App = () => {
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/message")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message))
-      .catch(err => console.log(err));
+    const token = localStorage.getItem('token');
+    if (token) {
+      setUserId(1);
+    }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUserId(undefined);
+    // post logout api call
+  };
+
   return (
-    <div className="App">
-      <h1>{message}</h1>
-    </div>
+    <>
+      <NavBar handleLogout={handleLogout} userId={userId} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
-}
+};
 
 export default App;

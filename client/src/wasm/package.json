@@ -1,0 +1,14 @@
+{
+  "name": "witness_encryption_functional_commitment",
+  "version": "0.1.0",
+  "files": [
+    "witness_encryption_functional_commitment_bg.wasm",
+    "witness_encryption_functional_commitment.js",
+    "witness_encryption_functional_commitment.d.ts"
+  ],
+  "module": "witness_encryption_functional_commitment.js",
+  "types": "witness_encryption_functional_commitment.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

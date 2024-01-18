@@ -1,0 +1,97 @@
+.NavBar-docs {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.NavBar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--l) var(--l);
+    background: rgba(125, 134, 139, 0.65);
+    position: absolute;
+    width: 100vw;
+    z-index: 100;
+    height: 32px;
+    top: 0;
+}
+
+.NavBar-title {
+    color: var(--white);
+    font-size: 20px;
+    font-family: "Mulish";
+}
+
+.NavBar-linkContainer {
+    margin-left: var(--l);
+}
+
+.NavBar-link,
+.NavBar-link:visited {
+    color: var(--white);
+    opacity: 0.6;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.NavBar-link:hover {
+    opacity: 0.8;
+}
+
+.NavBar-link+.NavBar-link {
+    margin-left: var(--m);
+}
+
+.NavBar-loginbutton {
+    position: absolute;
+    top: 16px;
+    right: 25px;
+    margin-right: 48px;
+}
+
+body {
+    font-family: Inter;
+}
+
+.button-54 {
+    font-family: "Roboto", sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #000;
+    cursor: pointer;
+    border: 3px solid;
+    padding: 0.25em 0.5em;
+    box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.button-54:active {
+    box-shadow: 0px 0px 0px 0px;
+    top: 5px;
+    left: 5px;
+}
+
+@media (min-width: 768px) {
+    .button-54 {
+        padding: 0.25em 0.75em;
+    }
+}
+
+.gradient1-text {
+    margin-top: 96px;
+    font-family: "Mulish";
+    text-align: center;
+    font-size: 30px;
+    /* Adjust the font size */
+    background: linear-gradient(45deg, #07e6f6, #a212d6);
+    /* Define your gradient colors and angle */
+    -webkit-background-clip: text;
+    /* Clip the gradient to the text */
+    background-clip: text;
+    font-weight: bold;
+}
