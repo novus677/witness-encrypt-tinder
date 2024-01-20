@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
 import Login from './pages/Login';
@@ -28,8 +28,8 @@ const App = () => {
     <>
       <NavBar handleLogout={handleLogout} userId={userId} />
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<Login setUserId={setUserId} />} />
+        <Route path="/" element={userId ? <MainPage /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

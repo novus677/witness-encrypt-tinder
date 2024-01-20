@@ -5,8 +5,8 @@ const MainPage = () => {
     const [wasmLoaded, setWasmLoaded] = useState(false);
     const [commitValue, setCommitValue] = useState(0);
 
-    const handleCommitValue = (e) => {
-        setCommitValue(e.target.value);
+    const handleCommitValue = (event) => {
+        setCommitValue(event.target.value);
     };
 
     useEffect(() => {
