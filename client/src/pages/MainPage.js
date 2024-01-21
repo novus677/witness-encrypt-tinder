@@ -1,57 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import * as we from '../wasm/witness_encryption_functional_commitment.js';
 
-const MainPage = () => {
-    const [wasmLoaded, setWasmLoaded] = useState(false);
-    const [commitValue, setCommitValue] = useState(0);
-
-    const handleCommitValue = (event) => {
-        setCommitValue(event.target.value);
-    };
+const MainPage = ({ userId }) => {
+    const [username, setUsername] = useState("");
+    const [groupsCreated, setGroupsCreated] = useState([]);
+    const [groupsAdded, setGroupsAdded] = useState([]);
 
     useEffect(() => {
-        const loadWasm = async () => {
-            await we.default();
-            setWasmLoaded(true);
-        }
-        loadWasm();
-    }, []);
+        const queryUser = async () => {
+            try {
+                const res = await fetch(`http://localhost:8000/routes/query/user/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                });
 
-    useEffect(() => {
-        try {
-            if (!localStorage.getItem('setupParams')) {
-                const params = we.setup_unsafe();
-                localStorage.setItem('setupParams', JSON.stringify(params));
-                console.log("Parameters stored in localStorage");
-            } else {
-                console.log("Parameters already in localStorage");
+                const data = await res.json();
+                if (res.status === 200) {
+                    setUsername(data.username);
+                    setGroupsCreated(data.groupsCreated);
+                    setGroupsAdded(data.groupsAdded);
+                } else {
+                    console.error("Query failed:", data);
+                }
+            } catch (err) {
+                console.error("Error fetching user data:", err);
             }
-        } catch (err) {
-            console.error("Failed to load setup parameters:", err);
-        }
+        };
 
-    }, [wasmLoaded]);
-
-    const handleCommit = async () => {
-        if (!wasmLoaded) {
-            console.error("WASM not loaded");
+        if (userId) {
+            queryUser();
+        } else {
+            console.log("No user");
         }
-
-        try {
-            const params = JSON.parse(localStorage.getItem('setupParams'));
-            const commitment = we.commit(params["u1_bytes"], params["u2_bytes"], commitValue);
-            localStorage.setItem('commitment', JSON.stringify(commitment));
-            console.log("Commitment stored in localStorage");
-        } catch (err) {
-            console.error("Failed to compute commitment:", err);
-        }
-    };
+    }, [userId]);
 
     return (
         <div>
-            <h1>buffer</h1>
-            <input type="text" value={commitValue} onChange={handleCommitValue} />
-            <button onClick={handleCommit}>Commit</button>
+            <h1>Welcome, {username}</h1>
+            <div>
+                <h2>Your Groups:</h2>
+                {groupsCreated.length + groupsAdded.length > 0 ? (
+                    <u1>
+                        {groupsCreated.map(group => (
+                            <li key={group._id}>{group.name}</li>
+                        ))}
+                        {groupsAdded.map(group => (
+                            <li key={group._id}>{group.name}</li>
+                        ))}
+                    </u1>
+                ) : (
+                    <p>You are not in any groups yet.</p>
+                )}
+            </div>
         </div>
     );
 }

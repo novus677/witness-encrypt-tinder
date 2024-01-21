@@ -13,14 +13,15 @@ const App = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      setUserId(1);
-    }
+    // if (token) {
+    //   setUserId(1);
+    // }
   }, []);
 
   const handleLogout = () => {
+    console.log("Logging out...");
     localStorage.removeItem('token');
-    setUserId(undefined);
+    setUserId(null);
     // post logout api call
   };
 
@@ -29,7 +30,7 @@ const App = () => {
       <NavBar handleLogout={handleLogout} userId={userId} />
       <Routes>
         <Route path="/login" element={<Login setUserId={setUserId} />} />
-        <Route path="/" element={userId ? <MainPage /> : <Navigate to="/login" />} />
+        <Route path="/" element={userId ? <MainPage userId={userId} /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

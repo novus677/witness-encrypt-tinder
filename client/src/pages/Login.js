@@ -6,11 +6,14 @@ const Login = ({ setUserId }) => {
     const navigate = useNavigate();
     const [usernameLogin, setUsernameLogin] = useState("");
     const [passwordLogin, setPasswordLogin] = useState("");
+    const [loginError, setLoginError] = useState("");
     const [usernameRegister, setUsernameRegister] = useState("");
     const [passwordRegister, setPasswordRegister] = useState("");
+    const [registerError, setRegisterError] = useState("");
 
     const handleLogin = async (event) => {
         event.preventDefault();
+        setLoginError("");
         try {
             const res = await fetch('http://localhost:8000/routes/auth/login', {
                 method: 'POST',
@@ -26,14 +29,17 @@ const Login = ({ setUserId }) => {
                 navigate('/');
             } else {
                 console.error(data);
+                setLoginError(data.message);
             }
         } catch (err) {
             console.error("Login failed:", err);
+            setLoginError("Login failed. Please try again.");
         }
     };
 
     const handleRegister = async (event) => {
         event.preventDefault();
+        setRegisterError("");
         try {
             const res = await fetch('http://localhost:8000/routes/auth/register', {
                 method: 'POST',
@@ -43,12 +49,17 @@ const Login = ({ setUserId }) => {
 
             const data = await res.json();
             if (res.status === 201) {
+                localStorage.setItem('token', data.token);
+                setUserId(data.userId);
                 console.log("Successfully registered:", data);
+                navigate('/');
             } else {
                 console.error("Registration failed:", data);
+                setRegisterError(data.message);
             }
         } catch (err) {
             console.error("Registration failed:", err);
+            setRegisterError("Registration failed. Please try again.");
         }
     }
 
@@ -74,6 +85,7 @@ const Login = ({ setUserId }) => {
                             onChange={(event) => setPasswordLogin(event.target.value)}
                         />
                     </label>
+                    {loginError && <div className="error-message">{loginError}</div>}
                     <button type="submit">Login</button>
                 </form>
             </div>
@@ -96,6 +108,7 @@ const Login = ({ setUserId }) => {
                             onChange={(event) => setPasswordRegister(event.target.value)}
                         />
                     </label>
+                    {registerError && <div className="error-message">{registerError}</div>}
                     <button type="submit">Register</button>
                 </form>
             </div>

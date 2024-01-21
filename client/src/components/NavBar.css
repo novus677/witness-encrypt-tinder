@@ -1,8 +1,3 @@
-.NavBar-docs {
-    text-decoration: none;
-    color: #007bff;
-}
-
 .NavBar-container {
     display: flex;
     justify-content: space-between;
@@ -23,8 +18,11 @@
     font-family: 'Mulish';
 }
 
-.NavBar-linkContainer {
-    margin-left: var(--l);
+.NavBar-linkContainer,
+.NavBar-docs {
+    /* margin-left: var(--l); */
+    display: flex;
+    align-items: center;
 }
 
 .NavBar-link,
@@ -44,11 +42,24 @@
 }
 
 .NavBar-loginbutton {
-    position: absolute;
-    top: 16px;
-    right: 25px;
-    margin-right: 48px;
+    background-color: white;
+    color: #007bff;
+    border: 2px solid #007bff;
+    border-radius: 15px;
+    padding: 8px 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
 }
+
+.NavBar-loginbutton:hover {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.5);
+}
+
 
 body {
     font-family: Inter;

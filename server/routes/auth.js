@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).send({ message: "Invalid username or password" });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ user: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(200).send({
             message: "Login successful",
             token,
@@ -45,7 +45,12 @@ router.post('/register', async (req, res) => {
         const user = await User({ username, password: hashedPassword });
         await user.save();
 
-        res.status(201).send({ message: "Successfully registered user" });
+        const token = jwt.sign({ user: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(201).send({
+            message: "Registration successful",
+            token,
+            userId: user._id,
+        });
     } catch (err) {
         res.status(500).send({ message: "Failed to register user" });
     }

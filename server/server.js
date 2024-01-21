@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
+const queryRoutes = require('./routes/query');
+const groupRoutes = require('./routes/group');
 // const MONGO_CONNECTION_URL = process.env.MONGO_CONNECTION_URL;
 const MONGO_CONNECTION_URL = "mongodb://localhost:27017/local_test_db";
 
@@ -17,7 +19,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/routes/auth', authRoutes);
-
+app.use('/routes/query', queryRoutes);
+app.use('/routes/group', groupRoutes);
 
 const PORT = process.env.PORT || 8000;
 

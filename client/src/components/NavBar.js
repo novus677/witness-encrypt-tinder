@@ -4,13 +4,13 @@ import './NavBar.css';
 const NavBar = ({ userId, handleLogout }) => {
     return (
         <nav className="NavBar-container">
-            <div className="NavBar-title u-inlineBlock">
+            <div className="NavBar-title">
                 <span className="gradient1-text">WE Tinder</span>
             </div>
-            <div className="NavBar-linkContainer u-inlineBlock">
+            <div className="NavBar-linkContainer">
                 {userId && (
                     <button
-                        className="button-54"
+                        className="NavBar-loginbutton"
                         onClick={handleLogout}
                     >
                         Logout
