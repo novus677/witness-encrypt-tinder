@@ -34,34 +34,35 @@ router.post('/create', authMiddleware, async (req, res) => {
     }
 });
 
-router.post('/add-user', authMiddleware, async (req, res) => {
+router.post('/add-users', authMiddleware, async (req, res) => {
     try {
-        const { groupId, userId } = req.body;
+        const { groupId, usernames } = req.body;
 
         const group = await Group.findById(groupId);
         if (!group) {
             return res.status(400).send({ message: "Group not found" });
         }
 
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(400).send({ message: "User not found" });
-        }
+        const usersToAdd = await User.find({ username: { $in: usernames } });
+        const userIdsToAdd = usersToAdd
+            .filter(user => !group.members.includes(user._id))
+            .map(user => user._id);
 
-        if (group.members.includes(userId)) {
-            return res.status(400).send({ message: "User already in group" });
-        }
-
-        group.members.push(userId);
+        userIdsToAdd.forEach(userId => {
+            group.members.push(userId);
+        });
         await group.save();
 
-        user.groupsAdded.push(groupId);
-        await user.save();
+        userIdsToAdd.forEach(async (userId) => {
+            const user = await User.findById(userId);
+            user.groupsAdded.push(groupId);
+            await user.save();
+        });
 
-        res.status(201).send({ message: "User added successfully" });
+        res.status(201).send({ message: `${userIdsToAdd.length} users added successfully` });
     } catch (err) {
         console.error(err);
-        res.status(500).send({ message: "Failed to add user" });
+        res.status(500).send({ message: "Failed to add users" });
     }
 });
 
