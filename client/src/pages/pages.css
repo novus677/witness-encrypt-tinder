@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
 .auth-container {
     display: flex;
     justify-content: center;
@@ -24,6 +32,7 @@ input[type='password'] {
     margin: 10px 0px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 16px;
 }
 
 label {
@@ -35,79 +44,92 @@ label {
 button {
     padding: 10px 15px;
     margin-top: 10px;
-    background-color: #4396f0;
+    background-color: #5D93E1;
     color: white;
     border: none;
     border-radius: 4px;
-    font-family: 'Roboto', sans-serif;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
     background-color: #0b4e96;
+    transform: translateY(-2px);
 }
 
 .error-message {
-    color: red;
+    color: #E53E3E;
     margin-top: 10px;
 }
 
 .groups-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     padding: 20px;
 }
 
 .group-details {
-    flex-basis: 60%;
+    flex-basis: 65%;
+}
+
+.group-details h1 {
+    font-size: 30px;
+    margin-top: 20px;
+    color: #4A4A4A;
+    font-weight: 600;
+}
+
+.create-group-form {
+    margin-left: 40px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
 }
 
 .create-group-form {
     flex-basis: 30%;
-    padding: 20px;
-    border-left: 1px solid #ccc;
 }
 
-.group-heading {
-    font-size: 24px;
+.create-group-form input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.group-heading,
+.commit-heading {
+    font-size: 22px;
     color: #333;
     margin-bottom: 15px;
+    font-weight: 600;
 }
 
-.group-list {
+.group-list,
+.commit-member-list {
     font-size: 18px;
     color: #555;
+    padding-left: 20px;
 }
 
-.group-item {
-    margin-bottom: 10px;
+.group-item,
+.commit-member-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.group-item:hover,
+.commit-member-item:hover {
+    background-color: #E9F0FA;
 }
 
 .commit-container {
     padding: 20px;
     margin-left: 20px;
-}
-
-.commit-heading {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.commit-member-list {
-    font-size: 18px;
-    color: #555;
-    list-style-type: none;
-    /* Optional: remove bullet points */
-    padding-left: 0;
-    /* Align list items to the left */
-}
-
-.commit-member-item {
-    margin-bottom: 10px;
-    padding: 5px 0;
 }
 
 .commit-back-button {
@@ -125,4 +147,23 @@ button:hover {
 
 .commit-back-button:hover {
     background-color: #0b4e96;
+}
+
+.already-committed {
+    color: #E53E3E;
+    margin-left: 10px;
+}
+
+.committed-members-container {
+    margin-top: 20px;
+}
+
+.commit-page-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.commit-container,
+.committed-members-container {
+    flex: 1;
 }

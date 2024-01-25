@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import * as we from '../wasm/witness_encryption_functional_commitment.js';
 
 const Groups = ({ userId }) => {
     const [username, setUsername] = useState("");
     const [groupsCreated, setGroupsCreated] = useState([]);
     const [groupsAdded, setGroupsAdded] = useState([]);
     const [newGroupName, setNewGroupName] = useState("");
+    const [wasmLoaded, setWasmLoaded] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const loadWasm = async () => {
+            await we.default();
+            setWasmLoaded(true);
+        }
+        loadWasm();
+    }, []);
 
     useEffect(() => {
         const queryUser = async () => {
@@ -43,14 +53,19 @@ const Groups = ({ userId }) => {
         event.preventDefault();
         if (!newGroupName) return;
 
+        if (!wasmLoaded) { console.error("WASM not loaded"); return; }
+
+
         try {
+            // Using unsafe setup here!!
+            const params = we.setup_unsafe();
             const res = await fetch('http://localhost:8000/routes/group/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ groupName: newGroupName }),
+                body: JSON.stringify({ groupName: newGroupName, params }),
             });
 
             const data = await res.json();

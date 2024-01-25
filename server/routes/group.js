@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/create', authMiddleware, async (req, res) => {
     try {
         const groupName = req.body.groupName;
+        const params = req.body.params;
         const creatorId = req.user;
 
         const creator = await User.findById(creatorId);
@@ -18,6 +19,7 @@ router.post('/create', authMiddleware, async (req, res) => {
             name: groupName,
             creator: creatorId,
             members: [creator],
+            params: params,
         });
         await newGroup.save();
 
