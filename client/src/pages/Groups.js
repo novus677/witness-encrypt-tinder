@@ -106,14 +106,16 @@ const Groups = ({ userId }) => {
                 </div>
             </div>
             <div className="create-group-form">
-                <form onSubmit={handleCreateGroup}>
+                <h2>Create new group</h2>
+                <form onSubmit={handleCreateGroup} className='group-form'>
                     <input
                         type="text"
                         placeholder="Group name"
                         value={newGroupName}
                         onChange={(e) => setNewGroupName(e.target.value)}
+                        className='group-input'
                     />
-                    <button type="submit">Create new group</button>
+                    <button type="submit" className='group-button'>Create</button>
                 </form>
             </div>
         </div>

@@ -34,7 +34,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login setUserId={setUserId} />} />
         <Route path="/" element={userId ? <Groups userId={userId} /> : <Navigate to="/login" />} />
-        <Route path="/add-members/:groupId" element={<AddMembers />} />
+        <Route path="/add-members/:groupId" element={<AddMembers userId={userId} />} />
         <Route path="/group/:groupId" element={<Commit userId={userId} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

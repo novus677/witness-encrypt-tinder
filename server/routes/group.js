@@ -68,4 +68,58 @@ router.post('/add-users', authMiddleware, async (req, res) => {
     }
 });
 
+router.post('/done', authMiddleware, async (req, res) => {
+    const { groupId, userId } = req.body;
+    try {
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(400).send({ message: "Group not found" });
+        }
+
+        if (!group.members.includes(userId)) {
+            return res.status(400).send({ message: "User not in group" });
+        }
+
+        if (!group.finishedMembers.includes(userId)) {
+            group.finishedMembers.push(userId);
+            await group.save();
+        }
+
+        res.status(200).send({ message: "User marked as done" });
+    } catch (err) {
+        res.status(500).send({ message: "Server error" });
+    }
+});
+
+router.get('/all-done/:groupId', authMiddleware, async (req, res) => {
+    const { groupId } = req.params;
+    try {
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(400).send({ message: "Group not found" });
+        }
+
+        const allDone = group.finishedMembers.length === group.members.length;
+        res.status(200).send({ allDone });
+    } catch (err) {
+        res.status(500).send({ message: "Server error" });
+    }
+});
+
+router.get('/is-done/:groupId/:userId', authMiddleware, async (req, res) => {
+    const { groupId, userId } = req.params;
+    try {
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(400).send({ message: "Group not found" });
+        }
+
+        const done = group.finishedMembers.includes(userId);
+        res.status(200).send({ done });
+    } catch (err) {
+        res.status(500).send({ message: "Server error" });
+    }
+});
+
+
 module.exports = router;

@@ -4,6 +4,7 @@ const groupSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
+    finishedMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     params: {
         u1_bytes: { type: Buffer },
         u2_bytes: { type: Buffer },
