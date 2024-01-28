@@ -11,10 +11,13 @@ localforage.config({
 
 const Commit = ({ userId }) => {
     const { groupId } = useParams();
-    const [done, setDone] = useState(false);
-    const [allDone, setAllDone] = useState(false);
+    const [committed, setCommitted] = useState(false);
+    const [allCommitted, setAllCommitted] = useState(false);
+    const [encrypted, setEncrypted] = useState(false);
+    const [allEncrypted, setAllEncrypted] = useState(false);
     const [members, setMembers] = useState([]);
     const [committedMembers, setCommittedMembers] = useState({});
+    const [messages, setMessages] = useState({});
     const [params, setParams] = useState(null);
     const [wasmLoaded, setWasmLoaded] = useState(false);
     const navigate = useNavigate();
@@ -58,7 +61,49 @@ const Commit = ({ userId }) => {
             }
         };
 
-        const queryAllDone = async () => {
+        const queryAllEncrypted = async () => {
+            try {
+                const res = await fetch(`http://localhost:8000/routes/message/all-done/${groupId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                });
+
+                const data = await res.json();
+                if (res.status === 200) {
+                    setAllEncrypted(data.allDone);
+                } else {
+                    console.error("Query failed:", data);
+                }
+            } catch (err) {
+                console.error("Error fetching group data:", err);
+            }
+        }
+
+        const queryEncrypted = async () => {
+            try {
+                const res = await fetch(`http://localhost:8000/routes/message/is-done/${groupId}/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                });
+
+                const data = await res.json();
+                if (res.status === 200) {
+                    setEncrypted(data.done);
+                } else {
+                    console.error("Query failed:", data);
+                }
+            } catch (err) {
+                console.error("Error fetching message data:", err);
+            }
+        }
+
+        const queryAllCommitted = async () => {
             try {
                 const res = await fetch(`http://localhost:8000/routes/group/all-done/${groupId}`, {
                     method: 'GET',
@@ -70,7 +115,7 @@ const Commit = ({ userId }) => {
 
                 const data = await res.json();
                 if (res.status === 200) {
-                    setAllDone(data.allDone);
+                    setAllCommitted(data.allDone);
                 } else {
                     console.error("Query failed:", data);
                 }
@@ -79,7 +124,7 @@ const Commit = ({ userId }) => {
             }
         }
 
-        const queryDone = async () => {
+        const queryCommitted = async () => {
             try {
                 const res = await fetch(`http://localhost:8000/routes/group/is-done/${groupId}/${userId}`, {
                     method: 'GET',
@@ -91,7 +136,7 @@ const Commit = ({ userId }) => {
 
                 const data = await res.json();
                 if (res.status === 200) {
-                    setDone(data.done);
+                    setCommitted(data.done);
                 } else {
                     console.error("Query failed:", data);
                 }
@@ -101,9 +146,38 @@ const Commit = ({ userId }) => {
         }
 
         queryMembers();
-        queryAllDone();
-        queryDone();
+        queryAllEncrypted();
+        queryEncrypted();
+        queryAllCommitted();
+        queryCommitted();
     }, [groupId, navigate, userId]);
+
+    useEffect(() => {
+        if (allEncrypted) {
+            const fetchMessages = async () => {
+                try {
+                    const res = await fetch(`http://localhost:8000/routes/query/messages/${userId}/${groupId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                    });
+
+                    const data = await res.json();
+                    if (res.status === 200) {
+                        setMessages(data.messages);
+                    } else {
+                        console.error("Query failed:", data);
+                    }
+                } catch (err) {
+                    console.error("Error fetching messages:", err);
+                }
+            }
+
+            fetchMessages();
+        }
+    }, [allEncrypted, groupId, userId]);
 
     const handleCommit = async (memberId) => {
         if (!wasmLoaded) { console.error("WASM not loaded"); return; }
@@ -127,10 +201,10 @@ const Commit = ({ userId }) => {
                 body: JSON.stringify({ groupId, value: commitment['commit_bytes'] }),
             });
 
-            const data = res.json();
+            const data = await res.json();
             if (res.status === 201) {
                 console.log("Commitment stored successfully");
-                committedGroups[memberId] = commitment['r_commit_bytes'];
+                committedGroups[memberId] = { r_commit_bytes: commitment['r_commit_bytes'], commitmentId: data.commitmentId };
                 await localforage.setItem(groupId, committedGroups);
                 setCommittedMembers(prev => ({ ...prev, [memberId]: true }));
             } else {
@@ -155,7 +229,7 @@ const Commit = ({ userId }) => {
             const data = await res.json();
             if (res.status === 200) {
                 console.log("Marked user as done");
-                setDone(true);
+                setCommitted(true);
             } else {
                 console.error("Failed to mark as done:", data);
             }
@@ -181,13 +255,45 @@ const Commit = ({ userId }) => {
             const data = await res.json();
             if (res.status === 200) {
                 const commitments = data.commitments;
-                let messages = {};
-                for (let i = 0; i < members.length; i++) {
-                    messages[members[i]._id] = [];
-                }
+
+                const r_commit_bytes = await localforage.getItem(groupId) || {};
                 for (let i = 0; i < commitments.length; i++) {
-                    messages[commitments[i].user._id].push(commitments[i].value);
+                    try {
+                        const message = we.encrypt(params["u1_bytes"].data, params["u2_bytes"].data, commitments[i].value.data, userId, r_commit_bytes.hasOwnProperty(commitments[i].user._id) ? 1 : 0);
+                        const res = await fetch('http://localhost:8000/routes/message/send', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({ sender: userId, receiver: commitments[i].user._id, group: groupId, commitment: commitments[i]._id, content: message }),
+                        });
+                    } catch (err) {
+                        console.error("Failed to save encrypted message:", err);
+                    }
                 }
+
+                try {
+                    const res = await fetch('http://localhost:8000/routes/message/done', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify({ groupId, userId }),
+                    });
+
+                    const data = await res.json();
+                    if (res.status === 200) {
+                        console.log("Updated membersEncrypted");
+                    } else {
+                        console.error("Failed to update membersEncrypted:", data)
+                    }
+                } catch (err) {
+                    console.error("Failed to update membersEncrypted:", err);
+                }
+
+                setEncrypted(true);
             } else {
                 console.error("Failed to get commitments:", data);
             }
@@ -195,6 +301,32 @@ const Commit = ({ userId }) => {
             console.error("Failed to send encrypted messages:", err);
         }
     };
+
+    const handleReveal = async (memberId) => {
+        if (!wasmLoaded) { console.error("WASM not loaded"); return; }
+
+        if (!params) { console.error("No setup parameters"); return; }
+
+        const r_commit_bytes = await localforage.getItem(groupId).then(val => val[memberId]) || {};
+        for (const message of messages) {
+            if (message.sender._id === memberId && message.commitment._id === r_commit_bytes.commitmentId) {
+                try {
+                    const decrypted = we.decrypt(
+                        params["u1_bytes"].data,
+                        params["u2_bytes"].data,
+                        message.content["proj_key_bytes"].data,
+                        message.content["rand_bytes"].data,
+                        message.content["ciphertext"],
+                        memberId,
+                        r_commit_bytes.r_commit_bytes,
+                    )
+                    console.log("Decrypted message:", decrypted);
+                } catch (err) {
+                    console.error("Failed to decrypt message:", err);
+                }
+            }
+        }
+    }
 
     const handleGoBack = () => {
         navigate('/');
@@ -216,19 +348,23 @@ const Commit = ({ userId }) => {
                     ))}
                 </ul>
                 <button onClick={handleGoBack} className='commit-back-button'>Back to groups</button>
-                {done && <p>You have finished committing members.</p>}
-                {!done && <button onClick={handleDone}>Done</button>}
-                {allDone && <button onClick={handleEncrypt}>Encrypt</button>}
+                {committed && <p>You have finished committing members.</p>}
+                {!committed && <button onClick={handleDone}>Done</button>}
+                {encrypted && <p>You have finished encrypting messages.</p>}
+                {allCommitted && !encrypted && <button onClick={handleEncrypt}>Encrypt</button>}
             </div>
             <div className='committed-members-container'>
                 <h3>Committed members</h3>
                 <ul>
                     {members.filter(member => committedMembers.hasOwnProperty(member._id)).map(member => (
-                        <li key={member._id}>{member.username}</li>
+                        <li key={member._id}>
+                            {member.username}
+                            {allEncrypted && <button onClick={() => handleReveal(member._id)}>Reveal</button>}
+                        </li>
                     ))}
                 </ul>
             </div>
-        </div>
+        </div >
     );
 };
 

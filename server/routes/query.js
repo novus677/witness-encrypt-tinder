@@ -3,6 +3,7 @@ const authMiddleware = require('../middlewares/auth_middleware');
 const Commitment = require('../models/Commitment');
 const Group = require('../models/Group');
 const User = require('../models/User');
+const Message = require('../models/Message');
 
 const router = express.Router();
 
@@ -61,6 +62,19 @@ router.get('/commitment/:groupId', authMiddleware, async (req, res) => {
         res.status(200).send({
             message: "Query successful",
             commitments: group.commitments,
+        });
+    } catch (err) {
+        res.status(500).send({ message: "Server error" });
+    }
+});
+
+router.get('/messages/:userId/:groupId', authMiddleware, async (req, res) => {
+    try {
+        const { userId, groupId } = req.params;
+        const messages = await Message.find({ receiver: userId, group: groupId }).populate('sender', 'username').populate('commitment');
+        res.status(200).send({
+            message: "Query successful",
+            messages: messages,
         });
     } catch (err) {
         res.status(500).send({ message: "Server error" });

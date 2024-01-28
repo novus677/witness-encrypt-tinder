@@ -31,7 +31,6 @@ router.post('/create', authMiddleware, async (req, res) => {
             groupId: newGroup._id,
         });
     } catch (err) {
-        console.error(err);
         res.status(500).send({ message: "Failed to create group" });
     }
 });
@@ -63,7 +62,6 @@ router.post('/add-users', authMiddleware, async (req, res) => {
 
         res.status(201).send({ message: `${userIdsToAdd.length} users added successfully` });
     } catch (err) {
-        console.error(err);
         res.status(500).send({ message: "Failed to add users" });
     }
 });
@@ -80,8 +78,8 @@ router.post('/done', authMiddleware, async (req, res) => {
             return res.status(400).send({ message: "User not in group" });
         }
 
-        if (!group.finishedMembers.includes(userId)) {
-            group.finishedMembers.push(userId);
+        if (!group.membersCommitted.includes(userId)) {
+            group.membersCommitted.push(userId);
             await group.save();
         }
 
@@ -99,7 +97,7 @@ router.get('/all-done/:groupId', authMiddleware, async (req, res) => {
             return res.status(400).send({ message: "Group not found" });
         }
 
-        const allDone = group.finishedMembers.length === group.members.length;
+        const allDone = group.membersCommitted.length === group.members.length;
         res.status(200).send({ allDone });
     } catch (err) {
         res.status(500).send({ message: "Server error" });
@@ -114,7 +112,7 @@ router.get('/is-done/:groupId/:userId', authMiddleware, async (req, res) => {
             return res.status(400).send({ message: "Group not found" });
         }
 
-        const done = group.finishedMembers.includes(userId);
+        const done = group.membersCommitted.includes(userId);
         res.status(200).send({ done });
     } catch (err) {
         res.status(500).send({ message: "Server error" });
