@@ -31,7 +31,11 @@ router.post('/create', authMiddleware, async (req, res) => {
             groupId: newGroup._id,
         });
     } catch (err) {
-        res.status(500).send({ message: "Failed to create group" });
+        if (err.code === 11000) {
+            res.status(409).send({ message: "Group name already exists" });
+        } else {
+            res.status(500).send({ message: "Server error" });
+        }
     }
 });
 
@@ -62,7 +66,7 @@ router.post('/add-users', authMiddleware, async (req, res) => {
 
         res.status(201).send({ message: `${userIdsToAdd.length} users added successfully` });
     } catch (err) {
-        res.status(500).send({ message: "Failed to add users" });
+        res.status(500).send({ message: "Server error" });
     }
 });
 

@@ -14,13 +14,6 @@ const App = () => {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    // if (token) {
-    //   setUserId(1);
-    // }
-  }, []);
-
   const handleLogout = () => {
     console.log("Logging out...");
     localStorage.removeItem('token');

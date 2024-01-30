@@ -4,7 +4,7 @@
     align-items: center;
     /* padding: var(--l) var(--l); */
     background-color: #ADD8E6;
-    padding: 10px 20px;
+    padding: 15px 20px;
     /* position: absolute;
     width: 100vw;
     z-index: 100;
@@ -15,88 +15,35 @@
 .NavBar-title {
     color: var(--white);
     font-size: 20px;
-    font-family: 'Mulish';
+    font-family: 'Roboto', sans-serif;
+    margin-left: 10px;
 }
 
-.NavBar-linkContainer,
-.NavBar-docs {
-    /* margin-left: var(--l); */
-    display: flex;
-    align-items: center;
-}
-
-.NavBar-link,
-.NavBar-link:visited {
-    color: var(--white);
-    opacity: 0.6;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.NavBar-link:hover {
-    opacity: 0.8;
-}
-
-.NavBar-link+.NavBar-link {
-    margin-left: var(--m);
-}
-
-.NavBar-loginbutton {
-    background-color: white;
-    color: #007bff;
-    border: 2px solid #007bff;
+.NavBar-button {
+    background-color: #2982e2;
+    color: white;
+    border: 2px solid #1466b8;
     border-radius: 15px;
+    margin-right: 30px;
     padding: 8px 15px;
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 123, 0.3);
     transition: all 0.3s ease;
-}
-
-.NavBar-loginbutton:hover {
-    background-color: #007bff;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.5);
-}
-
-
-body {
-    font-family: Inter;
-}
-
-.button-54 {
-    font-family: "Roboto", sans-serif;
-    font-size: 11px;
-    letter-spacing: 2px;
     text-decoration: none;
-    text-transform: uppercase;
-    color: #000;
-    cursor: pointer;
-    border: 3px solid;
-    padding: 0.25em 0.5em;
-    box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
-    position: relative;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
+    display: inline-block;
 }
 
-.button-54:active {
-    box-shadow: 0px 0px 0px 0px;
-    top: 5px;
-    left: 5px;
-}
-
-@media (min-width: 768px) {
-    .button-54 {
-        padding: 0.25em 0.75em;
-    }
+.NavBar-button:hover {
+    background-color: #003366;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.5);
+    transform: translateY(-2px);
 }
 
 .gradient1-text {
     margin-top: 96px;
-    font-family: "Mulish";
+    font-family: "Roboto", sans-serif;
     text-align: center;
     font-size: 30px;
     /* Adjust the font size */

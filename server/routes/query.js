@@ -26,6 +26,20 @@ router.get('/user/:userId', authMiddleware, async (req, res) => {
     }
 });
 
+router.get('/is-user/:username', authMiddleware, async (req, res) => {
+    try {
+        const username = req.params.username;
+        const user = await User.findOne({ username: username });
+
+        return res.status(200).send({
+            message: "Query successful",
+            isUser: !!user,
+        });
+    } catch (err) {
+        res.status(500).send({ message: "Server error" });
+    }
+});
+
 router.get('/group/:groupId', authMiddleware, async (req, res) => {
     try {
         const group = await Group.findById(req.params.groupId).populate('members');

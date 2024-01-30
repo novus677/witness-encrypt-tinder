@@ -86,7 +86,7 @@ const Login = ({ setUserId }) => {
                         />
                     </label>
                     {loginError && <div className="error-message">{loginError}</div>}
-                    <button type="submit">Login</button>
+                    <button type="submit" style={{ marginTop: '10px' }}>Login</button>
                 </form>
             </div>
             <div className="register-box">
@@ -109,7 +109,7 @@ const Login = ({ setUserId }) => {
                         />
                     </label>
                     {registerError && <div className="error-message">{registerError}</div>}
-                    <button type="submit">Register</button>
+                    <button type="submit" style={{ marginTop: '10px' }}>Register</button>
                 </form>
             </div>
         </div>

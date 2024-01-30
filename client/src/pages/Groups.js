@@ -7,6 +7,7 @@ const Groups = ({ userId }) => {
     const [groupsCreated, setGroupsCreated] = useState([]);
     const [groupsAdded, setGroupsAdded] = useState([]);
     const [newGroupName, setNewGroupName] = useState("");
+    const [newGroupError, setNewGroupError] = useState("");
     const [wasmLoaded, setWasmLoaded] = useState(false);
     const navigate = useNavigate();
 
@@ -55,7 +56,6 @@ const Groups = ({ userId }) => {
 
         if (!wasmLoaded) { console.error("WASM not loaded"); return; }
 
-
         try {
             // Using unsafe setup here!!
             const params = we.setup_unsafe();
@@ -72,7 +72,10 @@ const Groups = ({ userId }) => {
             if (res.status === 201) {
                 console.log("Group created:", data);
                 setNewGroupName("");
+                setNewGroupError("");
                 navigate(`/add-members/${data.groupId}`);
+            } else if (res.status === 409) {
+                setNewGroupError("Group name already exists");
             } else {
                 console.error("Failed to create group:", data);
             }
@@ -86,7 +89,7 @@ const Groups = ({ userId }) => {
             <div className="group-details">
                 <h1>Welcome, {username}</h1>
                 <div>
-                    <h2 className="group-heading">Your Groups:</h2>
+                    <h2 className="group-heading">Your groups:</h2>
                     {groupsCreated.length + groupsAdded.length > 0 ? (
                         <ul className="group-list">
                             {groupsCreated.map(group => (
@@ -108,14 +111,17 @@ const Groups = ({ userId }) => {
             <div className="create-group-form">
                 <h2>Create new group</h2>
                 <form onSubmit={handleCreateGroup} className='group-form'>
-                    <input
-                        type="text"
-                        placeholder="Group name"
-                        value={newGroupName}
-                        onChange={(e) => setNewGroupName(e.target.value)}
-                        className='group-input'
-                    />
-                    <button type="submit" className='group-button'>Create</button>
+                    <div className='input-container'>
+                        <input
+                            type="text"
+                            placeholder="Group name"
+                            value={newGroupName}
+                            onChange={(e) => setNewGroupName(e.target.value)}
+                            className='group-input'
+                        />
+                        <button type="submit" className='group-button'>Create</button>
+                    </div>
+                    {newGroupError && <p className='error-message'>{newGroupError}</p>}
                 </form>
             </div>
         </div>

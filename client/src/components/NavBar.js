@@ -1,26 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './NavBar.css';
 
 const NavBar = ({ userId, handleLogout }) => {
     return (
         <nav className="NavBar-container">
             <div className="NavBar-title">
-                <span className="gradient1-text">WE Tinder</span>
+                <span className="gradient1-text">Flower</span>
             </div>
-            <div className="NavBar-linkContainer">
+            <div>
                 {userId && (
                     <button
-                        className="NavBar-loginbutton"
+                        className="NavBar-button"
                         onClick={handleLogout}
                     >
                         Logout
                     </button>
                 )}
+                <a
+                    href="https://github.com/novus677/witness-encrypt-tinder"
+                    className="NavBar-button"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Docs
+                </a>
             </div>
-            <div className="NavBar-docs">
-                <a href="https://github.com/novus677/witness-encrypt-tinder" target="_blank" rel="noopener noreferrer">Docs</a>
-            </div>
-        </nav>
+        </nav >
     );
 };
 
