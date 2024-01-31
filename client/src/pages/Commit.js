@@ -18,6 +18,7 @@ const Commit = ({ userId }) => {
     const [members, setMembers] = useState([]);
     const [committedMembers, setCommittedMembers] = useState({});
     const [messages, setMessages] = useState({});
+    const [matches, setMatches] = useState({});
     const [params, setParams] = useState(null);
     const [wasmLoaded, setWasmLoaded] = useState(false);
     const navigate = useNavigate();
@@ -320,7 +321,8 @@ const Commit = ({ userId }) => {
                         memberId,
                         r_commit_bytes.r_commit_bytes,
                     )
-                    console.log("Decrypted message:", decrypted);
+                    setMatches(prev => ({ ...prev, [memberId]: decrypted }));
+                    // console.log("Decrypted message:", decrypted);
                 } catch (err) {
                     console.error("Failed to decrypt message:", err);
                 }
@@ -339,27 +341,34 @@ const Commit = ({ userId }) => {
                 <ul className='commit-member-list'>
                     {members.map(member => (
                         <li key={member._id} className='commit-member-item'>
-                            {member.username}
-                            {committedMembers[member._id] ?
-                                <span className='already-committed'> Already committed</span> :
+                            <span className='commit-member-name'>{member.username}</span>
+                            {committedMembers[member._id] || committed ?
+                                <button className='button-disabled' disabled>Commit</button> :
                                 <button onClick={() => handleCommit(member._id)}>Commit</button>
                             }
                         </li>
                     ))}
                 </ul>
-                <button onClick={handleGoBack} className='commit-back-button'>Back to groups</button>
-                {committed && <p>You have finished committing members.</p>}
-                {!committed && <button onClick={handleDone}>Done</button>}
-                {encrypted && <p>You have finished encrypting messages.</p>}
-                {allCommitted && !encrypted && <button onClick={handleEncrypt}>Encrypt</button>}
+                <button onClick={handleGoBack}>Back</button>
+                {committed
+                    ? <button className='button-disabled' disabled style={{ marginLeft: '30px' }}>Done committing</button> :
+                    <button onClick={handleDone} style={{ marginLeft: '30px' }}>Done committing</button>}
+                {!allCommitted || encrypted ?
+                    <button className='button-disabled' disabled style={{ marginLeft: '30px' }}>Encrypt</button> :
+                    <button onClick={handleEncrypt} style={{ marginLeft: '30px' }}>Encrypt</button>}
             </div>
-            <div className='committed-members-container'>
-                <h3>Committed members</h3>
-                <ul>
+            <div className='committed-container'>
+                <h2 className='committed-heading'>Committed members</h2>
+                <ul className='committed-member-list'>
                     {members.filter(member => committedMembers.hasOwnProperty(member._id)).map(member => (
-                        <li key={member._id}>
-                            {member.username}
-                            {allEncrypted && <button onClick={() => handleReveal(member._id)}>Reveal</button>}
+                        <li key={member._id} className='committed-member-item'>
+                            <span className='committed-member-name'>{member.username}</span>
+                            {allEncrypted ?
+                                matches[member._id] === 1 ? "Match :D" :
+                                    matches[member._id] === 0 ? "No match :(" :
+                                        matches[member._id] ? "Error" :
+                                            <button onClick={() => handleReveal(member._id)}>Reveal</button> :
+                                <button className='button-disabled' disabled>Reveal</button>}
                         </li>
                     ))}
                 </ul>

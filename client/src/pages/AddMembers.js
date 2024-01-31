@@ -97,7 +97,7 @@ const AddMembers = ({ userId }) => {
                     {members.map((member, index) => (
                         <li key={index} className='member-item'>
                             <span className='member-name'>{member}</span>
-                            {member !== username && <button onClick={() => handleRemoveMember(member)} className='remove-button'>Remove</button>}
+                            {member !== username && <button onClick={() => handleRemoveMember(member)}>Remove</button>}
                         </li>
                     ))}
                 </ul>
