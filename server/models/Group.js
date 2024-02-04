@@ -6,10 +6,6 @@ const groupSchema = new mongoose.Schema({
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     membersCommitted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     membersEncrypted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    params: {
-        u1_bytes: { type: Buffer },
-        u2_bytes: { type: Buffer },
-    },
     commitments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Commitment' }],
 });
 

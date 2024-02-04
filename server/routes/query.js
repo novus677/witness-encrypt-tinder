@@ -4,6 +4,7 @@ const Commitment = require('../models/Commitment');
 const Group = require('../models/Group');
 const User = require('../models/User');
 const Message = require('../models/Message');
+const Params = require('../models/Params');
 
 const router = express.Router();
 
@@ -55,8 +56,26 @@ router.get('/group/:groupId', authMiddleware, async (req, res) => {
             message: "Query successful",
             groupName: group.name,
             members: group.members,
-            params: group.params,
         });
+    } catch (err) {
+        res.status(500).send({ message: "Server error" });
+    }
+});
+
+router.get('/params', authMiddleware, async (req, res) => {
+    try {
+        const params = await Params.find();
+
+        if (params.length === 1) {
+            res.status(200).send({
+                message: "Query successful",
+                params: params[0],
+            });
+        } else if (params.length === 0) {
+            res.status(404).send({ message: "No trusted setup" });
+        } else {
+            res.status(500).send({ message: "Too many setup paramaters" });
+        }
     } catch (err) {
         res.status(500).send({ message: "Server error" });
     }

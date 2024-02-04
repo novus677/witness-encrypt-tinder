@@ -2,3 +2,5 @@
 */build
 .env
 .DS_Store
+
+temp.js

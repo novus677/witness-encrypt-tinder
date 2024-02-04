@@ -57,15 +57,15 @@ const Groups = ({ userId }) => {
         if (!wasmLoaded) { console.error("WASM not loaded"); return; }
 
         try {
-            // Using unsafe setup here!!
-            const params = we.setup_unsafe();
+            // // Using unsafe setup here!!
+            // const params = we.setup_unsafe();
             const res = await fetch('http://localhost:8000/routes/group/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ groupName: newGroupName, params }),
+                body: JSON.stringify({ groupName: newGroupName }),
             });
 
             const data = await res.json();

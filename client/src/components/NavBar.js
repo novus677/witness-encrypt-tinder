@@ -5,7 +5,7 @@ const NavBar = ({ userId, handleLogout }) => {
     return (
         <nav className="NavBar-container">
             <div className="NavBar-title">
-                <span className="gradient1-text">Flower</span>
+                <span className="gradient1-text">Oblivious</span>
             </div>
             <div>
                 {userId && (

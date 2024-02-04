@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import './pages.css';
 import * as we from '../wasm/witness_encryption_functional_commitment.js';
 import localforage from 'localforage';
@@ -32,6 +36,27 @@ const Commit = ({ userId }) => {
     }, []);
 
     useEffect(() => {
+        const fetchParams = async () => {
+            try {
+                const res = await fetch('http://localhost:8000/routes/query/params', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                });
+
+                const data = await res.json();
+                if (res.status === 200) {
+                    setParams(data.params);
+                } else {
+                    console.error("Query failed:", data);
+                }
+            } catch (err) {
+                console.error("Error fetching setup parameters:", err);
+            }
+        };
+
         const queryMembers = async () => {
             try {
                 const res = await fetch(`http://localhost:8000/routes/query/group/${groupId}`, {
@@ -52,7 +77,6 @@ const Commit = ({ userId }) => {
                     setMembers(
                         data.members.filter(member => member._id !== userId).sort((a, b) => a.username.localeCompare(b.username))
                     );
-                    setParams(data.params);
                     setCommittedMembers(await localforage.getItem(groupId) || {});
                 } else {
                     console.error("Query failed:", data);
@@ -146,6 +170,7 @@ const Commit = ({ userId }) => {
             }
         }
 
+        fetchParams();
         queryMembers();
         queryAllEncrypted();
         queryEncrypted();
@@ -337,28 +362,26 @@ const Commit = ({ userId }) => {
     return (
         <div className='commit-page-container'>
             <div className='commit-container'>
-                <h2 className='commit-heading'>Members</h2>
+                <h2 className='commit-heading'>People</h2>
                 <ul className='commit-member-list'>
                     {members.map(member => (
                         <li key={member._id} className='commit-member-item'>
                             <span className='commit-member-name'>{member.username}</span>
                             {committedMembers[member._id] || committed ?
-                                <button className='button-disabled' disabled>Commit</button> :
-                                <button onClick={() => handleCommit(member._id)}>Commit</button>
+                                <FontAwesomeIcon icon={fasHeart} className='heart-disabled' /> :
+                                <FontAwesomeIcon icon={farHeart} className='clickable-heart' onClick={() => handleCommit(member._id)} title='Heart' />
                             }
                         </li>
                     ))}
                 </ul>
                 <button onClick={handleGoBack}>Back</button>
-                {committed
-                    ? <button className='button-disabled' disabled style={{ marginLeft: '30px' }}>Done committing</button> :
-                    <button onClick={handleDone} style={{ marginLeft: '30px' }}>Done committing</button>}
-                {!allCommitted || encrypted ?
-                    <button className='button-disabled' disabled style={{ marginLeft: '30px' }}>Encrypt</button> :
-                    <button onClick={handleEncrypt} style={{ marginLeft: '30px' }}>Encrypt</button>}
+                {!committed && <button onClick={handleDone} style={{ marginLeft: '30px' }}>Done</button>}
+                {allCommitted && !encrypted ?
+                    <button onClick={handleEncrypt} style={{ marginLeft: '30px' }}>Match!</button> :
+                    committed || encrypted ? <button className='button-disabled' disabled style={{ marginLeft: '30px' }}>Match!</button> : null}
             </div>
             <div className='committed-container'>
-                <h2 className='committed-heading'>Committed members</h2>
+                <h2 className='committed-heading'>Interested</h2>
                 <ul className='committed-member-list'>
                     {members.filter(member => committedMembers.hasOwnProperty(member._id)).map(member => (
                         <li key={member._id} className='committed-member-item'>
@@ -367,8 +390,8 @@ const Commit = ({ userId }) => {
                                 matches[member._id] === 1 ? "Match :D" :
                                     matches[member._id] === 0 ? "No match :(" :
                                         matches[member._id] ? "Error" :
-                                            <button onClick={() => handleReveal(member._id)}>Reveal</button> :
-                                <button className='button-disabled' disabled>Reveal</button>}
+                                            <FontAwesomeIcon icon={faQuestionCircle} onClick={() => handleReveal(member._id)} className='clickable-question-mark' title='Reveal' /> :
+                                <FontAwesomeIcon icon={faQuestionCircle} className='question-mark-disabled' />}
                         </li>
                     ))}
                 </ul>
