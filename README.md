@@ -2,25 +2,25 @@
 
 Perform Tinder-like matching such that nobody learns anything, apart from their own matches.
 
-As far as I am aware, this is the first application of a possibly secure [witness encryption scheme](https://eprint.iacr.org/2022/1510). There is also [this](https://github.com/guberti/witness-encryption-demos) repository which encrypts a Bitcoin wallet using a Sudoku puzzle, but its implementation relies on the CLT13 multilinear map, which is known to be insecure against the zeroizing attack.
+As far as I am aware, this is the first application of a (possibly) secure [witness encryption scheme](https://eprint.iacr.org/2022/1510). There is also [this repository](https://github.com/guberti/witness-encryption-demos) which encrypts a Bitcoin wallet using a Sudoku puzzle, but it relies on the CLT13 multilinear map, which is known to be insecure against the zeroizing attack.
 
 Thanks to [Divide-By-0](https://github.com/Divide-By-0/ideas-for-projects-people-would-use) for the idea!
 
 ## How to use
 - Register an account
 - Create a new group and add your friends (or have someone else create a group and have them add you)
-- Commit to the people that you're interested in (and hit "Done committing" when you're done)
-- Once everyone has committed to their matches, hit "Encrypt" to encrypt all your matches and send them out
-- Finally, reveal your matches and see who you matched with!
+- Heart all the people in your group that you're interested in (and then hit *Done*)
+- Once everyone has chosen who they are interested in, hit *Match!* to encrypt all your choices and send them out
+- Finally, reveal to see who you matched with!
 
 ## How it works
 
 ### Disclaimer
 This kind of Tinder matching (where nobody learns anything apart from their own matches) is already possible using basic MPC techniques (you could just pairwise apply an [oblivious transfer](https://en.wikipedia.org/wiki/Oblivious_transfer)). The interesting part of using witness encryption is that it introduces a sense of "non-interactivity," i.e., after everyone has committed to their matches, there is no required interaction between users.
 
-This application features a centralized server that holds a database of encrypted messages so that users can easily query for their own messages (so that users do not need to be always online). For a proper setup, one would use peer-to-peer communication to avoid possible censorship. 
+This application features a centralized server that holds a database of encrypted messages so that users can easily query for their own messages (so that users do not need to be always online). For a proper setup, one would use peer-to-peer communication to avoid possible censorship. Also, for the purposes of this MVP, the trusted setup parameters for the witness encryption scheme are hardcoded into the server.
 
-Setup parameters? Local storage stuff
+The application will store who you hearted (and the corresponding witness) in local storage. This is so that it can remember after you log out. If you really care, you would have to run everything locally and send your commitments and encrypted messages to the server/ other users.
 
 ### Witness encryption for succinct functional commitments
 
