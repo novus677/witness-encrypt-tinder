@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './pages.css';
 
+require('dotenv').config();
+
 const Login = ({ setUserId }) => {
     const navigate = useNavigate();
     const [usernameLogin, setUsernameLogin] = useState("");
@@ -15,7 +17,7 @@ const Login = ({ setUserId }) => {
         event.preventDefault();
         setLoginError("");
         try {
-            const res = await fetch('http://localhost:8000/routes/auth/login', {
+            const res = await fetch(`${process.env.API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: usernameLogin, password: passwordLogin }),
@@ -41,7 +43,7 @@ const Login = ({ setUserId }) => {
         event.preventDefault();
         setRegisterError("");
         try {
-            const res = await fetch('http://localhost:8000/routes/auth/register', {
+            const res = await fetch(`${process.env.API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: usernameRegister, password: passwordRegister }),

@@ -19,11 +19,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/routes/auth', authRoutes);
-app.use('/routes/query', queryRoutes);
-app.use('/routes/group', groupRoutes);
-app.use('/routes/commit', commitRoutes);
-app.use('/routes/message', messageRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/query', queryRoutes);
+app.use('/api/group', groupRoutes);
+app.use('/api/commit', commitRoutes);
+app.use('/api/message', messageRoutes);
 
 const PORT = process.env.PORT || 8000;
 
