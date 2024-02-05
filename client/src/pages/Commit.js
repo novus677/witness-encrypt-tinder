@@ -8,8 +8,6 @@ import './pages.css';
 import * as we from '../wasm/witness_encryption_functional_commitment.js';
 import localforage from 'localforage';
 
-require('dotenv').config();
-
 localforage.config({
     name: 'witness-encrypted-tinder',
     storeName: 'randomness',
@@ -40,7 +38,7 @@ const Commit = ({ userId }) => {
     useEffect(() => {
         const fetchParams = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/query/params`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/query/params`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,7 +59,7 @@ const Commit = ({ userId }) => {
 
         const queryMembers = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/query/group/${groupId}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/query/group/${groupId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -90,7 +88,7 @@ const Commit = ({ userId }) => {
 
         const queryAllEncrypted = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/message/all-done/${groupId}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message/all-done/${groupId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -111,7 +109,7 @@ const Commit = ({ userId }) => {
 
         const queryEncrypted = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/message/is-done/${groupId}/${userId}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message/is-done/${groupId}/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -132,7 +130,7 @@ const Commit = ({ userId }) => {
 
         const queryAllCommitted = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/group/all-done/${groupId}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/group/all-done/${groupId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -153,7 +151,7 @@ const Commit = ({ userId }) => {
 
         const queryCommitted = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/group/is-done/${groupId}/${userId}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/group/is-done/${groupId}/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -184,7 +182,7 @@ const Commit = ({ userId }) => {
         if (allEncrypted) {
             const fetchMessages = async () => {
                 try {
-                    const res = await fetch(`${process.env.API_URL}/api/query/messages/${userId}/${groupId}`, {
+                    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/query/messages/${userId}/${groupId}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -220,7 +218,7 @@ const Commit = ({ userId }) => {
             }
 
             const commitment = we.commit(params["u1_bytes"].data, params["u2_bytes"].data, memberId);
-            const res = await fetch(`${process.env.API_URL}/api/commit/`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/commit/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -245,7 +243,7 @@ const Commit = ({ userId }) => {
 
     const handleDone = async () => {
         try {
-            const res = await fetch(`${process.env.API_URL}/api/group/done`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/group/done`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -272,7 +270,7 @@ const Commit = ({ userId }) => {
         if (!params) { console.error("No setup parameters"); return; }
 
         try {
-            const res = await fetch(`${process.env.API_URL}/api/query/commitment/${groupId}`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/query/commitment/${groupId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -288,7 +286,7 @@ const Commit = ({ userId }) => {
                 for (let i = 0; i < commitments.length; i++) {
                     try {
                         const message = we.encrypt(params["u1_bytes"].data, params["u2_bytes"].data, commitments[i].value.data, userId, r_commit_bytes.hasOwnProperty(commitments[i].user._id) ? 1 : 0);
-                        const res = await fetch(`${process.env.API_URL}/api/message/send`, {
+                        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message/send`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -302,7 +300,7 @@ const Commit = ({ userId }) => {
                 }
 
                 try {
-                    const res = await fetch(`${process.env.API_URL}/api/message/done`, {
+                    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/message/done`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

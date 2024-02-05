@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import * as we from '../wasm/witness_encryption_functional_commitment.js';
 
-require('dotenv').config();
-
 const Groups = ({ userId }) => {
     const [username, setUsername] = useState("");
     const [groupsCreated, setGroupsCreated] = useState([]);
@@ -24,7 +22,7 @@ const Groups = ({ userId }) => {
     useEffect(() => {
         const queryUser = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/query/user/${userId}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/query/user/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,7 +59,7 @@ const Groups = ({ userId }) => {
         try {
             // // Using unsafe setup here!!
             // const params = we.setup_unsafe();
-            const res = await fetch(`${process.env.API_URL}/api/group/create`, {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/group/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

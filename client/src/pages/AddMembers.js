@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-require('dotenv').config();
-
 const AddMembers = ({ userId }) => {
     const [username, setUsername] = useState("");
     const [usernameToAdd, setUsernameToAdd] = useState("");
@@ -14,7 +12,7 @@ const AddMembers = ({ userId }) => {
     useEffect(() => {
         const queryUsername = async () => {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/query/user/${userId}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/query/user/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -42,7 +40,7 @@ const AddMembers = ({ userId }) => {
 
         if (usernameToAdd && !members.includes(usernameToAdd)) {
             try {
-                const res = await fetch(`${process.env.API_URL}/api/query/is-user/${usernameToAdd}`, {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/query/is-user/${usernameToAdd}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -76,7 +74,7 @@ const AddMembers = ({ userId }) => {
 
     const finalizeGroup = async () => {
         try {
-            await fetch(`${process.env.API_URL}/api/group/add-users`, {
+            await fetch(`${process.env.REACT_APP_API_URL}/api/group/add-users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
