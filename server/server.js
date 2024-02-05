@@ -9,10 +9,9 @@ const queryRoutes = require('./routes/query');
 const groupRoutes = require('./routes/group');
 const commitRoutes = require('./routes/commit');
 const messageRoutes = require('./routes/message');
-// const MONGO_CONNECTION_URL = process.env.MONGO_CONNECTION_URL;
-const MONGO_CONNECTION_URL = "mongodb://localhost:27017/local_test_db";
+const MONGO_CONNECTION_URL = process.env.MONGO_CONNECTION_URL;
 
-mongoose.connect(MONGO_CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true, dbName: process.env.MONGO_DB_NAME })
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error(`Error connecting to MongoDB: ${err}`));
 
