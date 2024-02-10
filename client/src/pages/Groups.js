@@ -109,8 +109,8 @@ const Groups = ({ userId }) => {
                 </div>
             </div>
             <div className="create-group-form">
-                <h2>Create new group</h2>
-                <form onSubmit={handleCreateGroup} className='group-form'>
+                <h2 style={{ marginLeft: "10px" }}>Create new group</h2>
+                <form onSubmit={handleCreateGroup} className='group-form' style={{ marginLeft: "10px" }}>
                     <div className='input-container'>
                         <input
                             type="text"
@@ -123,6 +123,15 @@ const Groups = ({ userId }) => {
                     </div>
                     {newGroupError && <p className='error-message'>{newGroupError}</p>}
                 </form>
+                <div className="instructions">
+                    <h3>How to use:</h3>
+                    <ol>
+                        <li>Create a new group and add your friends.</li>
+                        <li>In your group, heart the people that you're interested in. Then, click "Done".</li>
+                        <li>Once everyone's done, each person then needs to click "Match!".</li>
+                        <li>Once everyone's matched, click the question mark to reveal!</li>
+                    </ol>
+                </div>
             </div>
         </div>
     );

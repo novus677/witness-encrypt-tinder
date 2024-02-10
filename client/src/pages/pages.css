@@ -76,9 +76,8 @@ button:not(.button-disabled):hover {
     padding: 20px;
 }
 
-.group-details,
-.current-members {
-    flex-basis: 65%;
+.group-details {
+    flex-basis: 50%;
     margin-left: 20px;
 }
 
@@ -91,6 +90,22 @@ button:not(.button-disabled):hover {
 }
 
 .create-group-form,
+.add-member-form {
+    margin-left: 40px;
+    margin-right: 20px;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+    flex-basis: 40%;
+    height: 150px;
+}
+
+.current-members {
+    flex-basis: 65%;
+    margin-left: 20px;
+}
+
 .add-member-form {
     margin-left: 40px;
     margin-top: 20px;
@@ -131,6 +146,11 @@ button:not(.button-disabled):hover {
 .create-group-form .group-button:hover,
 .add-member-form .member-button:hover {
     background-color: #0b4e96;
+}
+
+.instructions {
+    margin-top: 60px;
+    font-size: 18px;
 }
 
 .group-heading,
@@ -206,8 +226,9 @@ button:not(.button-disabled):hover {
     background-color: transparent;
     color: #d9534f;
     border: 1px solid #d9534f;
-    padding: 5px 10px;
+    padding: 10px 15px;
     border-radius: 4px;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
