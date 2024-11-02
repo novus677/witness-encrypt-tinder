@@ -1,6 +1,6 @@
 # Oblivious: Matching with Witness Encryption
 
-Perform Tinder-like matching such that nobody learns anything, apart from their own matches. Check out [the website](https://oblivious-site.onrender.com)!
+Perform Tinder-like matching such that nobody learns anything, apart from their own matches. Check out [the website](https://oblivious-site.onrender.com) (server is currently down, sorry!).
 
 As far as I am aware, this is the first application of a (possibly) secure [witness encryption scheme](https://eprint.iacr.org/2022/1510). There is also [this repository](https://github.com/guberti/witness-encryption-demos) which encrypts a Bitcoin wallet using a Sudoku puzzle, but it relies on the CLT13 multilinear map, which is known to be insecure against the zeroizing attack.
 
